@@ -1,26 +1,38 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import exifr from "exifr/dist/lite.legacy.umd";
+import React, { useRef, useState } from "react";
+import "./index.css";
 
-function App() {
+export default function App() {
+  const fileRef = useRef(null);
+  const [orientation, setOrientation] = useState(null);
+
+  const onFileChange = () => {
+    const fileReader = new FileReader();
+
+    fileReader.onload = e => {
+      const buffer = fileReader.result;
+
+      exifr
+        .orientation(buffer)
+        .then(x => { setOrientation(typeof x === "undefined" ? null : x); })
+        .catch(e => { if (console) { console.error(e); } });
+    };
+
+    fileReader.readAsArrayBuffer(fileRef.current.files[0]);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        type="file"
+        ref={fileRef}
+        accept="image/jpeg"
+        onChange={onFileChange}
+      />
+      <div className="Body">
+        <label>Orientation</label>
+        <span>{orientation === null ? "NULL" : orientation}</span>
+      </div>
     </div>
   );
 }
-
-export default App;

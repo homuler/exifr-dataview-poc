@@ -11,3 +11,12 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.Body {
+  margin-top: 12px;
+}
+
+label {
+  font-weight: bold;
+  margin-right: 8px;
+}
